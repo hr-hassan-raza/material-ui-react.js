@@ -1,10 +1,51 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-// import { ButtonGroup } from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 import { Container } from "@mui/material";
+import AcUnitOutlinedIcon from "@mui/icons-material/AcUnitOutlined";
+import SendIcon from "@mui/icons-material/Send";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { makeStyles } from "@material-ui/styles"; // a function
+import TextField from "@material-ui/core/TextField";
+import { useState } from "react";
+
+const useStyles = makeStyles({
+  btn: {
+    fontSize: 60,
+    backgroundColor: "violet",
+    "&:hover": {
+      backgroundColor: "blue",
+    },
+  },
+  field: {
+    marginTop: 20,
+    marginBottom: 20,
+    display: "block",
+  },
+});
 
 export default function Create() {
+  const classes = useStyles();
+  const [title, setTitle] = useState("");
+  const [details, setDetails] = useState("");
+  const [detailsError, setDetailsError] = useState(false);
+  const [titleError, setTitleError] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setDetailsError(false);
+    setTitleError(false);
+    if (title == "") {
+      setTitleError(true);
+    }
+    if (details == "") {
+      setDetailsError(true);
+    }
+    if (title && details) {
+      console.log(title, details);
+    }
+  };
   return (
     <Container>
       <div>
@@ -34,14 +75,39 @@ export default function Create() {
         >
           Create a new note
         </Typography>
-        {/* <Button
-        onClick={() => console.log("You clicked me")}
-        type="submit"
-        color="secondary"
-        variant="contained"
-      >
-        Submit
-      </Button> */}
+        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+          <TextField
+            onChange={(e) => setTitle(e.target.value)}
+            className={classes.field}
+            label="Note Title"
+            variant="outlined"
+            color="secondary"
+            fullWidth
+            required
+            error={titleError}
+          />
+          <TextField
+            onChange={(e) => setDetails(e.target.value)}
+            className={classes.field}
+            label="Details"
+            variant="outlined"
+            color="secondary"
+            multiline // multi line
+            rows={4} // how many rows
+            fullWidth
+            required
+            error={detailsError}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="secondary"
+            startIcon={<SendIcon>adadawd</SendIcon>}
+          >
+            Submit
+          </Button>
+        </form>
+
         {/* <Button type="submit" color="primary">
         Submit
       </Button>
@@ -54,7 +120,25 @@ export default function Create() {
         <Button>Three</Button>
         <Button>Four</Button>
       </ButtonGroup> */}
+
+        {/* icons */}
+        {/* <br />
+        <AcUnitOutlinedIcon
+          color="secondary"
+          fontSize="large"
+        ></AcUnitOutlinedIcon>
+        <AcUnitOutlinedIcon
+          color="disabled"
+          fontSize="small"
+        ></AcUnitOutlinedIcon>
+        <AcUnitOutlinedIcon
+          color="action"
+          fontSize="small"
+        ></AcUnitOutlinedIcon>
+        <AcUnitOutlinedIcon color="error" fontSize="small"></AcUnitOutlinedIcon> */}
       </div>
     </Container>
   );
 }
+
+// Theme in MUI is bit like gaint object
