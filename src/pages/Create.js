@@ -1,7 +1,7 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { ButtonGroup } from "@mui/material";
+import { ButtonGroup, FormControlLabel } from "@mui/material";
 import { Container } from "@mui/material";
 import AcUnitOutlinedIcon from "@mui/icons-material/AcUnitOutlined";
 import SendIcon from "@mui/icons-material/Send";
@@ -9,6 +9,11 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { makeStyles } from "@material-ui/styles"; // a function
 import TextField from "@material-ui/core/TextField";
 import { useState } from "react";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const useStyles = makeStyles({
   btn: {
@@ -31,7 +36,8 @@ export default function Create() {
   const [details, setDetails] = useState("");
   const [detailsError, setDetailsError] = useState(false);
   const [titleError, setTitleError] = useState(false);
-
+  const [category, setCategory] = useState("todos");
+  const history = useHistory();
   const handleSubmit = (e) => {
     e.preventDefault();
     setDetailsError(false);
@@ -43,7 +49,11 @@ export default function Create() {
       setDetailsError(true);
     }
     if (title && details) {
-      console.log(title, details);
+      fetch("http://localhost:8000/notes", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({ title, details, category }),
+      }).then(() => history.push("/"));
     }
   };
   return (
@@ -98,6 +108,30 @@ export default function Create() {
             required
             error={detailsError}
           />
+          <FormControl className={classes.field}>
+            <FormLabel>Note Category</FormLabel>
+            <RadioGroup
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <FormControlLabel
+                value="money"
+                control={<Radio />}
+                label="Money"
+              />
+              <FormControlLabel
+                value="todos"
+                control={<Radio />}
+                label="Todos"
+              />
+              <FormControlLabel
+                value="reminders"
+                control={<Radio />}
+                label="Reminders"
+              />
+              <FormControlLabel value="work" control={<Radio />} label="Work" />
+            </RadioGroup>
+          </FormControl>
           <Button
             type="submit"
             variant="contained"
